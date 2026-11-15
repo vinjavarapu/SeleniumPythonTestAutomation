@@ -5,6 +5,7 @@ from typing import Literal
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support import expected_conditions as EC
 
 from pages.base_page import BasePage, Locator
 
@@ -64,12 +65,18 @@ class CartPage(BasePage):
 
     def remove_item(self, product_name: str) -> None:
         """Remove a named item from the cart."""
+        badge_count = int(self.get_badge_count())
         slug = "-".join(product_name.strip().lower().split())
         locator: Locator = (
             By.CSS_SELECTOR,
             f"[data-test='remove-{slug}']",
         )
         self.click(locator)
+        remaining_count = badge_count - 1
+        if remaining_count:
+            self.wait_until_text(self.CART_BADGE, str(remaining_count))
+        else:
+            self.wait.until(EC.invisibility_of_element_located(self.CART_BADGE))
 
     def get_badge_count(self) -> str:
         """Return the cart badge count."""
@@ -77,7 +84,8 @@ class CartPage(BasePage):
 
     def checkout(self) -> None:
         """Proceed to the customer information step."""
-        self.click(self.CHECKOUT_BUTTON)
+        self.click_via_script(self.CHECKOUT_BUTTON)
+        self.wait_for_url_contains("/checkout-step-one.html")
 
     def continue_shopping(self) -> None:
         """Return to the inventory listing."""

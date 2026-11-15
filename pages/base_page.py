@@ -49,6 +49,11 @@ class BasePage:
 
         self.wait.until(click_when_ready)
 
+    def click_via_script(self, locator: Locator) -> None:
+        """Dispatch a click event to a visible app control."""
+        element = self.wait_until_visible(locator)
+        self.driver.execute_script("arguments[0].click();", element)
+
     def enter_text(self, locator: Locator, text: str, clear: bool = True) -> None:
         """Enter text into a visible field, clearing it by default."""
         element = self.wait_until_visible(locator)
@@ -59,6 +64,10 @@ class BasePage:
     def get_text(self, locator: Locator) -> str:
         """Return the text of a visible element."""
         return self.wait_until_visible(locator).text
+
+    def wait_until_text(self, locator: Locator, text: str) -> None:
+        """Wait until a visible element has the expected text."""
+        self.wait.until(EC.text_to_be_present_in_element(locator, text))
 
     def find_all(self, locator: Locator) -> Sequence[WebElement]:
         """Return all elements matching a locator."""

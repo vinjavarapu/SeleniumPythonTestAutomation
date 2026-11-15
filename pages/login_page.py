@@ -49,5 +49,5 @@ class LoginPage(BasePage):
     def logout(self) -> None:
         """Open the side menu and log out."""
         self.click(self.MENU_BUTTON)
-        self.click(self.LOGOUT_LINK)
+        self.click_via_script(self.LOGOUT_LINK)
         self.wait_until_visible(self.LOGIN_BUTTON)
