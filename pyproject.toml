@@ -1,0 +1,15 @@
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers --strict-config"
+markers = [
+    "smoke: critical user journeys suitable for quick validation",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+exclude = ["first_test.py"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
